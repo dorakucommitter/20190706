@@ -18,16 +18,40 @@ application.config['SECRET_KEY'] = os.urandom(24)
 def predict_keras_mnist_beginner(srcimg):
     K.clear_session()
     # Model
-    model = keras.models.load_model('./model/tf_keras_mnist_beginner_weights.h5')
+    model = keras.models.load_model('./model/tf_keras_mnist_beginner.h5')
 
     x = srcimg / 255.0
     src_array = np.array(x)
     src_array = src_array.reshape(1, 28, 28)
-    print(src_array.shape)
-    print(src_array)
 
     predict = np.argmax(model.predict(src_array))
-    print(predict)
+    return(predict)
+
+
+# MNIST Expert
+def predict_keras_mnist_expert(srcimg):
+    K.clear_session()
+    # Model
+    model = keras.models.load_model('./model/tf_keras_mnist_expert.h5')
+
+    x = srcimg / 255.0
+    src_array = np.array(x)
+    src_array = src_array.reshape(1, 28, 28)
+
+    predict = np.argmax(model.predict(src_array))
+    return(predict)
+
+# MNIST CNN
+def predict_keras_mnist_cnn(srcimg):
+    K.clear_session()
+    # Model
+    model = keras.models.load_model('./model/tf_keras_mnist_cnn.h5')
+
+    x = srcimg / 255.0
+    src_array = np.array(x)
+    src_array = src_array.reshape(1, 28, 28, 1)
+
+    predict = np.argmax(model.predict(src_array))
     return(predict)
 
 
@@ -38,7 +62,7 @@ def index():
 ###
 # WebAPI送受信サンプル
 #
-@application.route('/api/predict/beginner', methods=['POST'])
+@application.route('/api/predict', methods=['POST'])
 def apitest():
     #application.logger.warn('test message')
     if request.method == 'POST':
@@ -59,11 +83,7 @@ def apitest():
         # 細かい理屈はあとで考えよう．．．
         inputimg = cv2.resize(a, (28,28))
 
-        result = predict_keras_mnist_beginner(inputimg)
-        #print(result[0])
-
-        #result = { 'predict_keras_beginner': str(predict_keras_beginner[0]) }
-        result = { 'predict_keras_beginner': 1 }
+        result = { 'predict_beginner': str(predict_keras_mnist_beginner(inputimg)), 'predict_expert': str(predict_keras_mnist_expert(inputimg)), 'predict_cnn': str(predict_keras_mnist_cnn(inputimg)) }
         return jsonify( result )
 
 if __name__ == '__main__':

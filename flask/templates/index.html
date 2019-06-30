@@ -16,7 +16,7 @@
       <div><canvas id="canvas" width="280" height="280"></canvas></div>
       <div><button id="btn_beginner">推論実行</button></div>
   
-      <table>
+      <table border="1">
         <caption>推論結果</caption>
         <tbody>
           <tr>
@@ -24,8 +24,16 @@
             <th>推論結果</th>
           </tr>
           <tr>
-            <td>Beginner(Tensorflow)</td>
-            <td><div id="predict_tensorflow"></div></td>
+            <td>Beginner</td>
+            <td><div id="predict_beginner"></div></td>
+          </tr>
+          <tr>
+            <td>Expert</td>
+            <td><div id="predict_expert"></div></td>
+          </tr>
+          <tr>
+            <td>CNN</td>
+            <td><div id="predict_cnn"></div></td>
           </tr>
         </tbody>
       </table>
@@ -41,7 +49,7 @@ var btn_beginner = document.getElementById('btn_beginner');
 btn_beginner.addEventListener('click', function() {
   var context = canvas.getContext('2d');
   $.ajax({
-    url:'/api/predict/beginner',
+    url:'/api/predict',
     type:'POST',
     dataType: 'json',
     contentType: 'application/json',
@@ -51,8 +59,10 @@ btn_beginner.addEventListener('click', function() {
   })
   // Ajaxリクエストが成功した時発動
   .done( (result) => {
-      $('#predict_tensorflow').html(result["predict_tensorflow"]);
-      console.log(result["predict_tensorflow"]);
+      $('#predict_beginner').html(result["predict_beginner"]);
+      $('#predict_expert').html(result["predict_expert"]);
+      $('#predict_cnn').html(result["predict_cnn"]);
+      console.log(result["predict_beginner"]);
   })
   // Ajaxリクエストが失敗した時発動
   .fail( (result) => {
